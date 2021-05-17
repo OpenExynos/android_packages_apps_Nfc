@@ -26,6 +26,18 @@ public interface DeviceHost {
     public interface DeviceHostListener {
         public void onRemoteEndpointDiscovered(TagEndpoint tag);
 
+/* START [P15020401] - Enable WCE with UICC/eSE. */
+        /**
+         * Notifies transaction
+         */
+        public void onCardEmulationDeselected();
+
+        /**
+         * Notifies transaction
+         */
+        public void onCardEmulationAidSelected(byte[] aid, byte[] data, int evtSrc);
+/* END [P15020401] - Enable WCE with UICC/eSE. */
+
         /**
          */
         public void onHostCardEmulationActivated();
@@ -47,6 +59,24 @@ public interface DeviceHost {
         public void onRemoteFieldActivated();
 
         public void onRemoteFieldDeactivated();
+
+/* START [P15020401] - Enable WCE with UICC/eSE. */
+        /**
+         * Notifies that the SE has been activated in listen mode
+         */
+        public void onSeListenActivated();
+
+        /**
+         * Notifies that the SE has been deactivated
+         */
+        public void onSeListenDeactivated();
+
+        public void onSeApduReceived(byte[] apdu);
+
+        public void onSeEmvCardRemoval();
+
+        public void onSeMifareAccess(byte[] block);
+/* END [P15020401] - Enable WCE with UICC/eSE. */
     }
 
     public interface TagEndpoint {
@@ -183,11 +213,31 @@ public interface DeviceHost {
 
     public boolean sendRawFrame(byte[] data);
 
-    public boolean routeAid(byte[] aid, int route);
+    public boolean routeAid(byte[] aid, int route, int power);
 
     public boolean unrouteAid(byte[] aid);
 
+/* START [P160421001] - Patch for Dynamic SE Selection */
+    public boolean setRoutingEntry(int type, int value, int route, int power);
+
+    public boolean clearRoutingEntry(int type);
+
+    public void doSetDefaultSe(int defaultSeId);
+/* END [P160421001] - Patch for Dynamic SE Selection */
+
+/* START [16052901P] - Change listen tech mask values */
+    public void doChangeListenTechMask(int tech_mask);
+/* END [16052901P] - Change listen tech mask values */
+
     public boolean commitRouting();
+
+/* START [P15041301] - Support SE on Device Power Off State */
+    public void doSetScreenOrPowerState(int state);
+/* END [P15041301] - Support SE on Device Power Off State */
+
+/* START [P1604040001] - Support Dual-SIM solution */
+    public void doSetPreferredSimSlot(int preferredSim);
+/* END [P1604040001] - Support Dual-SIM solution */
 
     public LlcpConnectionlessSocket createLlcpConnectionlessSocket(int nSap, String sn)
             throws LlcpException;
@@ -220,6 +270,10 @@ public interface DeviceHost {
 
     boolean getExtendedLengthApdusSupported();
 
+/* START [P15020401] - Enable WCE with UICC/eSE. */
+    byte[][] getWipeApdus();
+/* END [P15020401] - Enable WCE with UICC/eSE. */
+
     int getDefaultLlcpMiu();
 
     int getDefaultLlcpRwSize();
@@ -229,4 +283,9 @@ public interface DeviceHost {
     boolean enableScreenOffSuspend();
 
     boolean disableScreenOffSuspend();
+    // START [J00000004] System LSI - Flip Cover
+    public byte[] transceiveAuthData(byte[] data);
+    public byte[] startCoverAuth();
+    public boolean stopCoverAuth();
+    // END [J00000004] System LSI - Flip Cover
 }

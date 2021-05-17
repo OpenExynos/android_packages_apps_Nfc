@@ -14,6 +14,11 @@ class ScreenStateHelper {
     static final int SCREEN_STATE_ON_LOCKED = 2;
     static final int SCREEN_STATE_ON_UNLOCKED = 3;
 
+/* START [P15041301] - Support SE on Device Power Off State */
+    static final int DEVICE_POWER_STATE_ON = 6;
+    static final int DEVICE_POWER_STATE_OFF = 7;
+/* END [P15041301] - Support SE on Device Power Off State */
+
     private final PowerManager mPowerManager;
     private final KeyguardManager mKeyguardManager;
 

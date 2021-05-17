@@ -41,18 +41,21 @@ public class AidRoutingManager {
     // Every routing table entry is matched as a prefix
     static final int AID_MATCHING_PREFIX_ONLY = 0x02;
 
+/* START [P160421001] - Patch for Dynamic SE Selection */
+
     // This is the default IsoDep protocol route; it means
     // that for any AID that needs to be routed to this
     // destination, we won't need to add a rule to the routing
     // table, because this destination is already the default route.
     //
     // For Nexus devices, the default route is always 0x00.
-    final int mDefaultRoute;
+    static int mDefaultRoute;
 
     // For Nexus devices, just a static route to the eSE
     // OEMs/Carriers could manually map off-host AIDs
     // to the correct eSE/UICC based on state they keep.
-    final int mDefaultOffHostRoute;
+    static int mDefaultOffHostRoute;
+/* END [P160421001] - Patch for Dynamic SE Selection */
 
     // How the NFC controller can match AIDs in the routing table;
     // see AID_MATCHING constants
@@ -120,6 +123,13 @@ public class AidRoutingManager {
             aidRoutingTable.put(route, entries);
             routeForAid.put(aid, route);
         }
+
+/* START [P160421001] - Patch for Dynamic SE Selection */
+        mDefaultRoute = doGetDefaultRouteDestination();
+        if (DBG) Log.d(TAG, "mDefaultRoute=0x" + Integer.toHexString(mDefaultRoute));
+        mDefaultOffHostRoute = doGetDefaultOffHostRouteDestination();
+        if (DBG) Log.d(TAG, "mDefaultOffHostRoute=0x" + Integer.toHexString(mDefaultOffHostRoute));
+/* END [P160421001] - Patch for Dynamic SE Selection */
 
         synchronized (mLock) {
             if (routeForAid.equals(mRouteForAid)) {

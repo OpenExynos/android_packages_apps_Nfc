@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class RegisteredComponentCache {
     private static final String TAG = "RegisteredComponentCache";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     final Context mContext;
     final String mAction;

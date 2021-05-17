@@ -1,7 +1,7 @@
 LOCAL_PATH:= $(call my-dir)
 
 ########################################
-# NCI Configuration
+# SEC Configuration
 ########################################
 include $(CLEAR_VARS)
 
@@ -11,12 +11,12 @@ LOCAL_SRC_FILES := \
         $(call all-java-files-under, src)
 
 LOCAL_SRC_FILES += \
-        $(call all-java-files-under, nci)
+        $(call all-java-files-under, sec)
 
-LOCAL_PACKAGE_NAME := NfcNci
+LOCAL_PACKAGE_NAME := NfcSec
 LOCAL_CERTIFICATE := platform
 
-LOCAL_JNI_SHARED_LIBRARIES := libnfc_nci_jni
+LOCAL_JNI_SHARED_LIBRARIES := libnfc_sec_jni
 
 LOCAL_PROGUARD_ENABLED := disabled
 
